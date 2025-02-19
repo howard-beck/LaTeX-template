@@ -1,0 +1,61 @@
+\makeatletter
+% https://tex.stackexchange.com/questions/201956/how-do-i-make-all-the-theorem-alike-environments-have-an-ending-symbol
+\renewcommand\@endtheorem{%
+    \ifthenelse{\equal{\@thmstylenow}{plain}}%
+    {}%
+    {%
+        {\unskip\nobreak\hfil\penalty50
+        \hskip2em\vadjust{}\nobreak\hfil$\triangleleft$
+        \parfillskip=0pt \finalhyphendemerits=0 \par
+        \penalty 10000 \parskip=0pt\noindent}\ignorespaces
+    }%
+    \endtrivlist\@endpefalse%
+}
+
+\def\@thmstylenow{}
+\def\@currentthmstyle{plain}
+\let\@old@theoremstyle\theoremstyle
+\def\theoremstyle#1{%
+    \def\@currentthmstyle{#1}
+    \@old@theoremstyle{#1}
+}
+
+\let\@old@newtheorem\newtheorem
+\RenewDocumentCommand{\newtheorem}{m O{} m}{
+    \expandafter\let\csname @#1@thmstyle\endcsname\@currentthmstyle
+    \@old@newtheorem{#1}[#2]{#3}
+
+    \expandafter\let\csname @old@#1\expandafter\endcsname\csname#1\endcsname%
+    \expandafter\def\csname#1\endcsname##1{%
+        \expandafter\let\csname @thmstylenow\expandafter\endcsname\csname @#1@thmstyle\endcsname%
+        \csname @old@#1\endcsname##1%
+    }%
+}
+\makeatother
+
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{prop}{Proposition}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{conj}[thm]{Conjecture}
+\newtheorem{claim}[thm]{Claim}
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{rmk}[thm]{Remark}
+\newtheorem{notation}[thm]{Notation}
+\newtheorem{constr}[thm]{Construction}
+\newtheorem{rem}[thm]{Reminder}
+
+\newtheorem{question}[thm]{Question}
+\newtheorem{answer}[thm]{Answer}
+\newtheorem{example}[thm]{Example}
+\newtheorem{nexample}[thm]{Non-Example}
+
+\usepackage[breakable]{tcolorbox}
+\newtcolorbox{digression}[1][]{
+    width=0.9\linewidth,
+    center,
+    breakable,
+    title={\centering Digression}
+}

@@ -1,0 +1,281 @@
+%% NOTATIONS
+\def\tof#1{\xrightarrow{#1}}
+\let\incl\hookrightarrow
+\let\incled\hookleftarrow
+\def\inclUP{\mathrel{\rotatebox[origin=c]{90}{$\incl$}}}
+
+%% CATEGORIES
+\def\makecat#1{\expandafter\def\csname#1\endcsname{\mathsf{#1}\xspace}}
+\def\makefunct#1{\expandafter\def\csname#1\endcsname{\mathrm{#1}\xspace}}
+\def\makecatdesc#1{\expandafter\def\csname#1\endcsname{\mathrm{#1}\xspace}}
+
+% adjoint pair
+\let\adjoint\rightleftharpoons
+
+% isomorphism
+\let\iso\simeq
+\def\toiso{\tof{\sim}}
+% from arrow
+\let\from\leftarrow
+
+% opposite category
+\makecatdesc{op}
+
+% small categories
+\makecat{Cat}
+% locally small categories
+\makecat{CAT}
+
+% Hom bifunctor
+\makefunct{Hom}
+% functor category
+\makecat{Fun}
+% presheaf category
+\makecat{Psh}
+
+% finite
+\makecatdesc{fin}
+% virtual
+\makecatdesc{virt}
+
+% realization: Grpd --> Cat
+\makefunct{B}
+
+% Higher Algebra ish
+%  Dold-Kan correspondance
+\makefunct{DK}
+% Cobar construction
+\makefunct{CB}
+% Totalization
+\makefunct{Tot}
+
+\def\arrowsep{3.5pt}
+\newcommand\tto[1][2]{%
+    \hspace{2pt}%
+    \tikz{
+        \foreach \n in {1,...,#1}{%
+            \draw[->, transform canvas={shift={(0pt,\dimexpr2.5pt + \arrowsep*\n - \arrowsep/2 - \arrowsep/2*#1 \relax)}}] (0,0em) -- (1em,0em);
+        }
+    }%
+    \hspace{2pt}%
+}
+\def\ttto{\tto[3]}
+\newcommand\tfto[1][3]{%
+    \hspace{2pt}%
+    \tikz{
+        \foreach \n in {1,...,#1}{%
+            \ifodd\n
+                \def\thisarrow{->}
+            \else
+                \def\thisarrow{<-}
+            \fi
+            \draw[\thisarrow, transform canvas={shift={(0pt,\dimexpr2.5pt + \arrowsep*\n - \arrowsep/2 - \arrowsep/2*#1 \relax)}}] (0,0em) -- (1em,0em);
+        }
+    }%
+    \hspace{2pt}%
+}
+\newcommand\ftfrom[1][3]{%
+    \hspace{2pt}%
+    \tikz{
+        \foreach \n in {1,...,#1}{%
+            \ifodd\n
+                \def\thisarrow{<-}
+            \else
+                \def\thisarrow{->}
+            \fi
+            \draw[\thisarrow, transform canvas={shift={(0pt,\dimexpr2.5pt + \arrowsep*\n - \arrowsep/2 - \arrowsep/2*#1 \relax)}}] (0,0em) -- (1em,0em);
+        }
+    }%
+    \hspace{2pt}%
+}
+
+
+
+%% ALGEBRA
+% rings
+\def\R{\mathbb{R}}
+\def\C{\mathbb{C}}
+\def\Z{\mathbb{Z}}
+\def\Q{\mathbb{Q}}
+\def\F{\mathbb{F}}
+
+% groups
+\makecat{Grp}
+% groupoids
+\makecat{Grpd}
+% abelian groups
+\makecat{Ab}
+% arbitrary ring
+\makecat{Ring}
+% commutative rings
+\makecat{CRing}
+% graded
+\makecat{Gr}
+\def\GrRing{\Gr\Ring}
+% fields
+\makecat{Field}
+% modules
+\makecat{Mod}
+% comodules
+\makecat{Comod}
+% vector spaces
+\makecat{Vect}
+% commutative algebra objects
+\makecat{CAlg}
+% Ext
+\makefunct{Ext}
+
+% automorphisms
+\makefunct{Aut}
+
+% operations
+% direct sum
+\let\dsum\oplus
+% (virtual) direct difference
+\let\dminus\ominus
+\let\ddiff\dminus
+% direct product
+\let\dprod\otimes
+
+\makeatletter
+% https://tex.stackexchange.com/questions/24185/redefine-underscore-on-a-per-command-basis
+\def\tprod{%
+    \@ifnextchar_{\tprod@}{\otimes}
+}
+\def\tprod@_#1{
+    \underset{#1}{\otimes}
+}
+\makeatother
+
+% cokernel
+\def\coker{\mathrm{coker}}
+
+%% ALGEBRAIC GEOMETRY
+\makefunct{Aut}
+\def\Mfg{\mathcal{M}_{\mathrm{fg}}}
+\def\G{\mathbb{G}}
+\def\Ghat{\widehat{\mathbb{G}}}
+
+\def\Gm{\G_m}
+
+\makefunct{Spec}
+
+
+
+%% EQUIVARIANT
+% orbit category
+\def\Orb#1{\mathcal{O}_{#1}}
+% family of subgroups
+\def\family{\mathcal{F}}
+\def\cofamily{\mathcal{N}}
+
+% rank
+\def\rk{\mathrm{rk}}
+% corank
+\def\cork{\mathrm{cork}}
+\makecat{Nm}
+
+% real representation ring
+\makecat{RO}
+
+
+
+%% TOPOLOGY
+\makecat{Top}
+
+\def\pt{\star}
+
+% homeomorphisms
+\let\homeo\cong
+\let\homeom\homeo
+
+% suspension functor
+\let\Susp\Sigma
+% loop functor
+\let\Loop\Omega
+
+
+% smash product
+\let\Smash\otimes
+
+% (homotopy)(co)fibers
+\def\fib{\mathrm{fib}}
+\def\hofib{\mathrm{hofib}}
+\def\cofib{\mathrm{cofib}}
+\def\hocofib{\mathrm{hocofib}}
+
+\def\h{\mathsf{h}}
+
+% Mapping spaces
+\makeatletter
+\let\@make@ast@pt\false
+\def\Map{%
+    \@ifnextchar_{\mathsf{Map}\let\@make@ast@pt\true\xspace}{\mathsf{Map}\xspace}
+}
+\begingroup\lccode`~=`* \lowercase{\endgroup\def~}{%
+    \ifnum\@make@ast@pt=\false%
+        \bullet%
+    \else%
+        \pt%
+        \let\@make@ast@pt\false
+    \fi%
+}
+\mathcode`*="8000
+
+% cup product
+\let\@old@cup\cup
+\let\cup\smile
+\let\union\@old@cup
+
+% wedge sums use the \vee symbol, and smash products use the \wedge symbol
+% exchange these
+% \smash is used in subsections somehow, so we'll keep it around
+\let\@old@wedge\wedge
+\let\@old@bidwedge\bigwedge
+\let\wedge\vee
+
+\let\SpSmash\@old@wedge
+\let\SmashSp\SpSmash
+
+\let\bigsmashsp\@old@bigwedge
+\let\bigsmash\bigotimes
+\let\bigwedge\bigvee
+\makeatother
+
+
+%% Stable
+\makecat{Sp}
+\def\Spfin{\Sp^\omega}
+\def\Sppfin{\Spfin_{(p)}}
+
+% sphere spectrum
+\def\S{\mathbb{S}}
+% complex cobordism spectrum
+\def\MU{\mathrm{MU}}
+% Brown-Peterson spectrum
+\def\BP{\mathrm{BP}}
+% Eilenberg-MacLane spectrum
+\def\EM{{\normalfont \textrm{H}}}
+% Z-valued E-M spectrum
+\def\HZ{\EM\Z}
+
+% algebraic K-theory
+\makefunct{K}
+
+% E_n spectra
+\def\E#1{\mathbb{E}_{#1}}
+% E_\infty spectra
+\def\Einf{\E{\infty}}
+% H_\infty spectrum
+\def\Hinf{{\normalfont \textit{H}}_{\infty}}
+
+%% chromatic
+\def\height{\mathrm{height}}
+
+%% equivariant
+\def\tate{\mathrm{t}}
+\def\tCp{\tate C_p}
+\def\tG{\tate G}
+\let\GeomFix\Phi
+
+\def\borel#1{\underline{#1}}
