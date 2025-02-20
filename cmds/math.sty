@@ -147,6 +147,16 @@
 }
 \makeatother
 
+\makeatletter
+\let\@old@times\times
+\def\times{%
+    \@ifnextchar_{\times@}{\@old@times}
+}
+\def\times@_#1{
+    \underset{#1}{\@old@times}
+}
+\makeatother
+
 % cokernel
 \def\coker{\mathrm{coker}}
 
@@ -195,9 +205,6 @@
 \let\Loop\Omega
 
 
-% smash product
-\let\Smash\otimes
-
 % (homotopy)(co)fibers
 \def\fib{\mathrm{fib}}
 \def\hofib{\mathrm{hofib}}
@@ -233,6 +240,17 @@
 \let\@old@wedge\wedge
 \let\@old@bidwedge\bigwedge
 \let\wedge\vee
+% smash product
+\let\Smash\otimes
+\let\@old@smash\smash
+\def\smash{%
+    \relax\ifmmode%
+        \Smash%
+    \else%
+        \expandafter\@old@smash%
+    \fi%
+}
+\makeatother
 
 \let\SpSmash\@old@wedge
 \let\SmashSp\SpSmash
@@ -247,6 +265,17 @@
 \makecat{Sp}
 \def\Spfin{\Sp^\omega}
 \def\Sppfin{\Spfin_{(p)}}
+
+% completion
+\newcommand\compl[1][]{%
+    \ifthenelse{\equal{#1}{}}%
+    {%
+        ^{\@old@wedge}%
+    }{%
+        _{#1}^{\@old@wedge}%
+    }%
+}
+\def\pcompl{\compl[p]}
 
 % sphere spectrum
 \def\S{\mathbb{S}}

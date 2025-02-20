@@ -1,0 +1,17 @@
+\makeatletter
+\let\@left@paren=(
+\let\@right@paren=)
+
+\let\@old@tikz\tikz
+\def\@inter@tikz#1{
+    \@old@tikz{#1}
+    \endgroup
+}
+%\def\tikz{\begingroup \catcode`\(=12 \catcode`\)=12 \expandafter\@inter@tikz}
+
+\catcode`\(=\active
+\catcode`\)=\active
+\def({\relax\ifmmode\!\left\@left@paren\else\@left@paren\fi}
+\def){\relax\ifmmode\right\@right@paren\else\@right@paren\fi}
+
+\makeatother
