@@ -6,6 +6,14 @@
 \let\incled\hookleftarrow
 \def\inclUP{\mathrel{\rotatebox[origin=c]{90}{$\incl$}}}
 
+%% COMPLEX NUMBERS
+% https://tex.stackexchange.com/questions/668241/lowercase-mathscr-and-mathcal-letters
+\usepackage[scr=esstix]
+           {mathalpha}
+\def\Re{\mathscr{R\hspace{-0.1em}e}}
+\def\Im{\mathscr{I\hspace{-0.1em}m}}
+\let\conj\overline
+
 %% CATEGORIES
 \let\@style@cat\mathsf
 \let\@style@funct\mathrm
@@ -14,7 +22,13 @@
 
 \def\makecat#1{\expandafter\def\csname#1\endcsname{\@style@cat{#1}\xspace}}
 \def\makeop#1{\expandafter\def\csname#1\endcsname{\@style@op{#1}\xspace}}
-\def\makefunct#1{\expandafter\def\csname#1\endcsname{\@style@funct{#1}\xspace}}
+\def\makefunct#1{\expandafter\def\csname#1\endcsname{%
+    \@style@funct{#1}%
+    %\@ifnextchar({}{%
+    %    \,%
+    %}%
+    \xspace%
+}}
 \def\makecatdesc#1{\expandafter\def\csname#1\endcsname{\@style@cat@desc{#1}\xspace}}
 
 \def\makecat@pt#1{\expandafter\def\csname#1\endcsname{%
@@ -133,11 +147,7 @@
 \def\PSU{\mathrm{PSU}}
 \def\PSL{\mathrm{PSL}}
 
-\let\conj\overline
-
-% 
-
-%% Some categories
+% Some categories
 % groups
 \makecat{Grp}
 % groupoids
@@ -257,7 +267,12 @@
 % cup product
 \let\@old@cup\cup
 \let\cup\smile
-\let\union\@old@cup
+\def\union{%
+    \@ifnextchar_{\union@}{\@old@cup}
+}
+\def\union@_#1{
+    \underset{#1}{\@old@cup}
+}
 
 % wedge sums use the \vee symbol, and smash products use the \wedge symbol
 % exchange these
