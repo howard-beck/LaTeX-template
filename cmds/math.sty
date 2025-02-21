@@ -19,11 +19,11 @@
 
 \def\makecat@pt#1{\expandafter\def\csname#1\endcsname{%
     \@style@cat{#1}%
-    \@ifnextchar*{_}{}%
+    \@ifnextchar*{_{\pt}\expandafter\@gobble}{}%
 }}
 \def\makefunct@pt#1{\expandafter\def\csname#1\endcsname{%
     \@style@funct{#1}%
-    \@ifnextchar*{_}{}%
+    \@ifnextchar*{_{\pt}\expandafter\@gobble}{}%
 }}
 
 % adjoint pair
@@ -233,6 +233,9 @@
 % homeomorphisms
 \let\homeo\cong
 \let\homeom\homeo
+
+% point
+\def\pt{*}
 
 % suspension functor
 \let\Susp\Sigma

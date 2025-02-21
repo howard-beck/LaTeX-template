@@ -1,4 +1,9 @@
 \makeatletter
+\let\@old@qedsymbol\qedsymbol
+\def\qedsymbol{%
+    \ref*{theorem.\thethm} \@old@qedsymbol%
+}
+
 % https://tex.stackexchange.com/questions/201956/how-do-i-make-all-the-theorem-alike-environments-have-an-ending-symbol
 \renewcommand\@endtheorem{%
     \ifthenelse{\equal{\@thmstylenow}{plain}}%
@@ -29,6 +34,9 @@
     \expandafter\def\csname#1\endcsname##1{%
         \expandafter\let\csname @thmstylenow\expandafter\endcsname\csname @#1@thmstyle\endcsname%
         \csname @old@#1\endcsname##1%
+        %
+        \xdef\@currentlabel{(#3 \thethm)}%
+        \label{theorem.\thethm}%
     }%
 }
 \makeatother
@@ -37,7 +45,7 @@
 \newtheorem{lemma}{Lemma}
 \newtheorem{prop}{Proposition}
 \newtheorem{cor}[thm]{Corollary}
-\newtheorem{conj}[thm]{Conjecture}
+\newtheorem{conjecture}[thm]{Conjecture}
 \newtheorem{claim}[thm]{Claim}
 \newtheorem{fact}[thm]{Fact}
 
