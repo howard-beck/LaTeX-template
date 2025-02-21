@@ -1,7 +1,14 @@
 \makeatletter
+\newcounter{@thm@depth}
+\let\@thm@is@nested\false
+\let\@thm@was@nested\false
+
 \let\@old@qedsymbol\qedsymbol
 \def\qedsymbol{%
-    \ref*{theorem.\thethm} \@old@qedsymbol%
+    \ifnum\@thm@is@nested=\true%
+        [\expandafter\csname @thm@name@at@\the@thm@depth\endcsname]
+    \fi%
+    \@old@qedsymbol%
 }
 
 % https://tex.stackexchange.com/questions/201956/how-do-i-make-all-the-theorem-alike-environments-have-an-ending-symbol
@@ -15,6 +22,10 @@
         \penalty 10000 \parskip=0pt\noindent}\ignorespaces
     }%
     \endtrivlist\@endpefalse%
+    \addtocounter{@thm@depth}{-1}%
+    \ifnum\value{@thm@depth}=0%
+        \global\let\@thm@is@nested\false%
+    \fi%
 }
 
 \def\@thmstylenow{}
@@ -36,14 +47,20 @@
         \csname @old@#1\endcsname##1%
         %
         \xdef\@currentlabel{(#3 \thethm)}%
+        %
+        \ifnum\value{@thm@depth}>0%
+            \global\let\@thm@is@nested\true%
+        \fi
+        \stepcounter{@thm@depth}%
+        \expandafter\xdef\csname @thm@name@at@\the@thm@depth\endcsname{#3 \thethm}%
         \label{theorem.\thethm}%
     }%
 }
 \makeatother
 
 \newtheorem{thm}{Theorem}
-\newtheorem{lemma}{Lemma}
-\newtheorem{prop}{Proposition}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
 \newtheorem{cor}[thm]{Corollary}
 \newtheorem{conjecture}[thm]{Conjecture}
 \newtheorem{claim}[thm]{Claim}
