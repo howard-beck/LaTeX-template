@@ -1,3 +1,5 @@
+\makeatletter
+
 %% NOTATIONS
 \def\tof#1{\xrightarrow{#1}}
 \let\incl\hookrightarrow
@@ -5,9 +7,24 @@
 \def\inclUP{\mathrel{\rotatebox[origin=c]{90}{$\incl$}}}
 
 %% CATEGORIES
-\def\makecat#1{\expandafter\def\csname#1\endcsname{\mathsf{#1}\xspace}}
-\def\makefunct#1{\expandafter\def\csname#1\endcsname{\mathrm{#1}\xspace}}
-\def\makecatdesc#1{\expandafter\def\csname#1\endcsname{\mathrm{#1}\xspace}}
+\let\@style@cat\mathsf
+\let\@style@funct\mathrm
+\let\@style@op\mathrm
+\let\@style@cat@desc\mathrm
+
+\def\makecat#1{\expandafter\def\csname#1\endcsname{\@style@cat{#1}\xspace}}
+\def\makeop#1{\expandafter\def\csname#1\endcsname{\@style@op{#1}\xspace}}
+\def\makefunct#1{\expandafter\def\csname#1\endcsname{\@style@funct{#1}\xspace}}
+\def\makecatdesc#1{\expandafter\def\csname#1\endcsname{\@style@cat@desc{#1}\xspace}}
+
+\def\makecat@pt#1{\expandafter\def\csname#1\endcsname{%
+    \@style@cat{#1}%
+    \@ifnextchar*{_}{}%
+}}
+\def\makefunct@pt#1{\expandafter\def\csname#1\endcsname{%
+    \@style@funct{#1}%
+    \@ifnextchar*{_}{}%
+}}
 
 % adjoint pair
 \let\adjoint\rightleftharpoons
@@ -43,11 +60,11 @@
 
 % Higher Algebra ish
 %  Dold-Kan correspondance
-\makefunct{DK}
+\makeop{DK}
 % Cobar construction
-\makefunct{CB}
+\makeop{CB}
 % Totalization
-\makefunct{Tot}
+\makeop{Tot}
 
 \def\arrowsep{3.5pt}
 \newcommand\tto[1][2]{%
@@ -92,13 +109,35 @@
 
 
 %% ALGEBRA
-% rings
+% Rings
 \def\R{\mathbb{R}}
 \def\C{\mathbb{C}}
 \def\Z{\mathbb{Z}}
 \def\Q{\mathbb{Q}}
 \def\F{\mathbb{F}}
+% quaternions
+\def\QH{\mathbb{H}}
 
+% Linear algebra
+\def\GL{\mathrm{GL}}
+\def\O{\mathrm{O}}
+\def\U{\mathrm{U}}
+\def\SL{\mathrm{SL}}
+\def\SO{\mathrm{SO}}
+\def\SU{\mathrm{SU}}
+\def\GL{\mathrm{GL}}
+\def\O{\mathrm{O}}
+\def\U{\mathrm{U}}
+\def\PGL{\mathrm{PGL}}
+\def\PO{\mathrm{PO}}
+\def\PSU{\mathrm{PSU}}
+\def\PSL{\mathrm{PSL}}
+
+\let\conj\overline
+
+% 
+
+%% Some categories
 % groups
 \makecat{Grp}
 % groupoids
@@ -126,7 +165,7 @@
 \makefunct{Ext}
 
 % automorphisms
-\makefunct{Aut}
+\makeop{Aut}
 
 % operations
 % direct sum
@@ -137,7 +176,6 @@
 % direct product
 \let\dprod\otimes
 
-\makeatletter
 % https://tex.stackexchange.com/questions/24185/redefine-underscore-on-a-per-command-basis
 \def\tprod{%
     \@ifnextchar_{\tprod@}{\otimes}
@@ -145,9 +183,8 @@
 \def\tprod@_#1{
     \underset{#1}{\otimes}
 }
-\makeatother
 
-\makeatletter
+
 \let\@old@times\times
 \def\times{%
     \@ifnextchar_{\times@}{\@old@times}
@@ -155,7 +192,7 @@
 \def\times@_#1{
     \underset{#1}{\@old@times}
 }
-\makeatother
+
 
 % cokernel
 \def\coker{\mathrm{coker}}
@@ -191,9 +228,7 @@
 
 
 %% TOPOLOGY
-\makecat{Top}
-
-\def\pt{\star}
+\makecat@pt{Top}
 
 % homeomorphisms
 \let\homeo\cong
@@ -214,20 +249,7 @@
 \def\h{\mathsf{h}}
 
 % Mapping spaces
-\makeatletter
-\let\@make@ast@pt\false
-\def\Map{%
-    \@ifnextchar_{\mathsf{Map}\let\@make@ast@pt\true\xspace}{\mathsf{Map}\xspace}
-}
-\begingroup\lccode`~=`* \lowercase{\endgroup\def~}{%
-    \ifnum\@make@ast@pt=\false%
-        \bullet%
-    \else%
-        \pt%
-        \let\@make@ast@pt\false
-    \fi%
-}
-\mathcode`*="8000
+\makefunct@pt{Map}
 
 % cup product
 \let\@old@cup\cup
@@ -250,7 +272,7 @@
         \expandafter\@old@smash%
     \fi%
 }
-\makeatother
+
 
 \let\SpSmash\@old@wedge
 \let\SmashSp\SpSmash
@@ -258,13 +280,34 @@
 \let\bigsmashsp\@old@bigwedge
 \let\bigsmash\bigotimes
 \let\bigwedge\bigvee
-\makeatother
+
+% Algebraic topology
+% (co)homology
+\def\H{\mathrm{H}}
+% Steenrod squares
+\def\Sq{\mathrm{Sq}}
+% Steenrod algebra
+\def\Steenrod#1{\mathcal{A}_{#1}}
+\def\Ap{\Steenrod{p}}
+
+% Differential topology
+\def\T{\mathrm{T}}
+
 
 
 %% Stable
 \makecat{Sp}
 \def\Spfin{\Sp^\omega}
 \def\Sppfin{\Spfin_{(p)}}
+
+\def\Suspinf{%
+    \Susp^{\infty}%
+    \@ifnextchar+{%
+        _{+}%
+        \@gobble
+    }{}%
+}
+\def\Loopinf{\Loop^{\infty}}
 
 % completion
 \newcommand\compl[1][]{%
@@ -288,8 +331,11 @@
 % Z-valued E-M spectrum
 \def\HZ{\EM\Z}
 
-% algebraic K-theory
-\makefunct{K}
+% algebraic K-theory and friends
+\makeop{K}
+\makeop{THH}
+\makeop{TC}
+\makeop{TR}
 
 % E_n spectra
 \def\E#1{\mathbb{E}_{#1}}
@@ -308,3 +354,7 @@
 \let\GeomFix\Phi
 
 \def\borel#1{\underline{#1}}
+
+
+
+\makeatother

@@ -2,16 +2,18 @@
 \let\@left@paren=(
 \let\@right@paren=)
 
-\let\@old@tikz\tikz
-\def\@inter@tikz#1{
-    \@old@tikz{#1}
-    \endgroup
-}
-%\def\tikz{\begingroup \catcode`\(=12 \catcode`\)=12 \expandafter\@inter@tikz}
-
 \catcode`\(=\active
 \catcode`\)=\active
 \def({\relax\ifmmode\!\left\@left@paren\else\@left@paren\fi}
 \def){\relax\ifmmode\right\@right@paren\else\@right@paren\fi}
 
+
+
+\let\@left@angle=\langle
+\let\@right@angle=\rangle
+
+\def\langle{\left\@left@angle}
+\def\rangle{\right\@right@angle}
+
+%% do this for \langle \rangle
 \makeatother
