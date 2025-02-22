@@ -16,6 +16,14 @@
 \usepackage{ifthen}
 \usepackage{pgffor}
 
+
+\usepackage[scr=esstix, cal=esstix]{mathalpha}
+\makeatletter
+\DeclareSymbolFontAlphabet{\@old@mathcal}{symbols}
+\let\mathcal@sp\mathcal
+\let\mathcal\@old@mathcal
+\makeatother
+
 \usepackage{cmds/style}
 \usepackage{cmds/thm}
 \usepackage{cmds/quiver}

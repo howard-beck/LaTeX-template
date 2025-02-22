@@ -8,8 +8,6 @@
 
 %% COMPLEX NUMBERS
 % https://tex.stackexchange.com/questions/668241/lowercase-mathscr-and-mathcal-letters
-\usepackage[scr=esstix]
-           {mathalpha}
 \def\Re{\mathscr{R\hspace{-0.1em}e}}
 \def\Im{\mathscr{I\hspace{-0.1em}m}}
 \let\conj\overline
@@ -20,23 +18,17 @@
 \let\@style@op\mathrm
 \let\@style@cat@desc\mathrm
 
-\def\makecat#1{\expandafter\def\csname#1\endcsname{\@style@cat{#1}\xspace}}
-\def\makeop#1{\expandafter\def\csname#1\endcsname{\@style@op{#1}\xspace}}
-\def\makefunct#1{\expandafter\def\csname#1\endcsname{%
-    \@style@funct{#1}%
-    %\@ifnextchar({}{%
-    %    \,%
-    %}%
-    \xspace%
-}}
+\NewDocumentCommand\makecat{m O{#1}}{\expandafter\def\csname#1\endcsname{\@style@cat{#2}\xspace}}
+\NewDocumentCommand\makeop{m O{#1}}{\expandafter\def\csname#1\endcsname{\@style@op{#2}\xspace}}
+\NewDocumentCommand\makefunct{m O{#1}}{\expandafter\def\csname#1\endcsname{\@style@funct{#2}\xspace}}
 \def\makecatdesc#1{\expandafter\def\csname#1\endcsname{\@style@cat@desc{#1}\xspace}}
 
 \def\makecat@pt#1{\expandafter\def\csname#1\endcsname{%
     \@style@cat{#1}%
     \@ifnextchar*{_{\pt}\expandafter\@gobble}{}%
 }}
-\def\makefunct@pt#1{\expandafter\def\csname#1\endcsname{%
-    \@style@funct{#1}%
+\NewDocumentCommand\makefunct@pt{m O{#1}}{\expandafter\def\csname#1\endcsname{%
+    \@style@funct{#2}%
     \@ifnextchar*{_{\pt}\expandafter\@gobble}{}%
 }}
 
@@ -342,19 +334,27 @@
 }
 \def\pcompl{\compl[p]}
 
-% sphere spectrum
-\def\S{\mathbb{S}}
-% complex cobordism spectrum
-\def\MU{\mathrm{MU}}
-% Brown-Peterson spectrum
-\def\BP{\mathrm{BP}}
+\NewDocumentCommand\makespectrum{m O{#1}}{%
+    \expandafter\def\csname#1\endcsname{\mathcal@sp{#2}}%
+}
+\makespectrum{S}
+\makespectrum{MU}
+\makespectrum{BP}
+\makespectrum{tmf}
+% Morava K-theory
+\makespectrum{K}
+% telescope
+\makespectrum{T}
+\makespectrum{KU}
+\makespectrum{KO}
+
 % Eilenberg-MacLane spectrum
 \def\EM{{\normalfont \textrm{H}}}
 % Z-valued E-M spectrum
 \def\HZ{\EM\Z}
 
 % algebraic K-theory and friends
-\makeop{K}
+\makeop{Kalg}[K]
 \makeop{THH}
 \makeop{TC}
 \makeop{TR}

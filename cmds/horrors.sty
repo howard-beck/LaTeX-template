@@ -5,7 +5,7 @@
 \catcode`\(=\active
 \catcode`\)=\active
 \def({\relax\ifmmode\mathchoice{\!}{\!}{}{}\left\@left@paren\else\@left@paren\fi}
-\def){\relax\ifmmode\right\@right@paren\else\@right@paren\fi}
+\def){\relax\ifmmode\right\@right@paren\mathchoice{\!}{\!}{}{}\else\@right@paren\fi}
 
 
 
