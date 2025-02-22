@@ -6,6 +6,12 @@
 \let\incled\hookleftarrow
 \def\inclUP{\mathrel{\rotatebox[origin=c]{90}{$\incl$}}}
 
+% https://tex.stackexchange.com/questions/2607/spacing-around-left-and-right
+\let\@old@left\left
+\let\@old@right\right
+\renewcommand{\left}{\mathopen{}\mathclose\bgroup\@old@left}
+\renewcommand{\right}{\aftergroup\egroup\@old@right}
+
 %% COMPLEX NUMBERS
 % https://tex.stackexchange.com/questions/668241/lowercase-mathscr-and-mathcal-letters
 \def\Re{\mathscr{R\hspace{-0.1em}e}}
@@ -347,9 +353,11 @@
 \makespectrum{T}
 \makespectrum{KU}
 \makespectrum{KO}
+\makespectrum{LT}[E]
+\def\En{\LT_{n}}
 
 % Eilenberg-MacLane spectrum
-\def\EM{{\normalfont \textrm{H}}}
+\makespectrum{EM}[H]
 % Z-valued E-M spectrum
 \def\HZ{\EM\Z}
 
