@@ -4,8 +4,22 @@
 
 \catcode`\(=\active
 \catcode`\)=\active
-\def({\relax\ifmmode\left\@left@paren\else\@left@paren\fi}
-\def){\relax\ifmmode\right\@right@paren\else\@right@paren\fi}
+\def({%
+    \relax%
+    \ifmmode%
+        \left\@left@paren%
+    \else%
+        \@left@paren%
+    \fi%
+}
+\def){%
+    \relax%
+    \ifmmode%
+        \right\@right@paren%
+    \else%
+        \@right@paren%
+    \fi%
+}
 
 
 

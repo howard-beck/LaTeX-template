@@ -2,14 +2,19 @@
 
 \usepackage{cmds/packages}
 
+\makeatletter
+
 \begin{document}
 $$ \S\compl[\MU] $$
 Imagine maps:
-$$ \Map*^G(A, B) $$
+$$ \Map*^G \@left@paren A, B\@right@paren $$
+$$ \Map*^G (A, B) $$
 where $ A, B \in \Top*^G $.
 
 If $ X \in \Top_* $ and $ Y \in \Top $, we can form the spectra:
 $$ \Suspinf X, \Suspinf+ Y $$
+and for a spectrum $ Z \in \Sp $, we can form the pointed space:
+$$ \Loopinf Z $$
 
 \begin{thm}[Pythagoras]
 $ a^2 + b^2 = c^2 $.
@@ -49,5 +54,11 @@ Duh
 \end{proof}
 \end{rmk}
 
-$$ \S, \MU, \tmf, \BP, \T(n), \K(n), \HZ $$
+$$ \S, \MU, \tmf, \BP, \T(n), \K(n), \HZ, \LT_n $$
+$$ S, MU, tmf, BP, T(n), K(n), H\Z, E_n $$
+
+\begin{claim}
+When $ z \in \C $, we have that:
+$$ e^z = e^{\Re(z)} (\cos \Im(z) + i \sin \Im(z)) $$
+\end{claim}
 \end{document}

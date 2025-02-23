@@ -12,6 +12,8 @@
 \renewcommand{\left}{\mathopen{}\mathclose\bgroup\@old@left}
 \renewcommand{\right}{\aftergroup\egroup\@old@right}
 
+\let\emptyset\varnothing
+
 %% COMPLEX NUMBERS
 % https://tex.stackexchange.com/questions/668241/lowercase-mathscr-and-mathcal-letters
 \def\Re{\mathscr{R\hspace{-0.1em}e}}
@@ -343,7 +345,7 @@
 \NewDocumentCommand\makespectrum{m O{#1}}{%
     \expandafter\def\csname#1\endcsname{\mathcal@sp{#2}}%
 }
-\makespectrum{S}
+\def\S{\mathbb{S}}
 \makespectrum{MU}
 \makespectrum{BP}
 \makespectrum{tmf}
