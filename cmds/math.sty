@@ -233,7 +233,7 @@
 % rank
 \def\rk{\mathrm{rk}}
 % corank
-\def\cork{\mathrm{cork}}
+\def\cork{\mathrm{cork}\let\@morava\true}
 \makecat{Nm}
 
 % real representation ring
@@ -349,8 +349,58 @@
 \makespectrum{MU}
 \makespectrum{BP}
 \makespectrum{tmf}
+
 % Morava K-theory
-\makespectrum{K}
+\newcounter{K}
+\def\@check@morava@against#1#2{%
+    \IfBeginWith{#1}{\detokenize{#2}}{%
+        \let\@morava\true%
+        \message{[#1 is morava]}%
+    }{\message{[#1 is not morava]}}%
+}
+
+\def\declareIsMorava#1#2{%
+    \expandafter\gdef\csname @K@#1@is@morava\endcsname{#2}%
+}
+\def\K#1{%
+    \stepcounter{K}%
+    \ifcsname @K@\theK @is@morava\endcsname%
+        \ifnum\csname @K@\theK @is@morava\endcsname=1%
+            \mathcal@sp{K}%
+        \else%
+            \mathrm{K}%
+        \fi%
+    \else%
+        K%
+    \fi%
+    %
+    %
+    \let\@morava\false%
+    \edef\@paren@depth@now{\theparen@depth}%
+    %
+    \let\@paren@do@nothing\true%
+    \let\@has@left@paren\false%
+    #1%
+    \let\@paren@do@nothing\false%
+    %
+    \ifnum\@has@left@paren=\true%
+        \expandafter\def\csname paren@depth@\@paren@depth@now @on@close\endcsname{%
+            \def\@K@arg{\detokenize\expandafter\expandafter\expandafter{\expandafter\@paren@arg}}%
+            %
+            \@check@morava@against{\@K@arg}{n}
+            \@check@morava@against{\@K@arg}{m}
+            \@check@morava@against{\@K@arg}{i}
+            \@check@morava@against{\@K@arg}{j}
+            \IfBeginWith{\@K@arg}{\infty}{\let\@morava\true}{}%
+            %
+            \immediate\write\@auxout{%
+                \string%
+                \declareIsMorava{\theK}{\@morava}%
+            }%
+        }%
+        #1%
+    \fi%
+}
 % telescope
 \makespectrum{T}
 \makespectrum{KU}

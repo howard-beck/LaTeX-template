@@ -4,23 +4,36 @@
 
 \catcode`\(=\active
 \catcode`\)=\active
+
+\newcounter{paren@depth}
+
+\let\@paren@do@nothing\false
 \def({%
     \relax%
     \ifmmode%
-        \left\@left@paren%
+        \let\@has@left@paren\true%
+        \ifnum\@paren@do@nothing=\false%
+            \stepcounter{paren@depth}%
+            \@left@paren%
+            \expandafter\expandafter\expandafter\@BRACKET@
+        \fi%
     \else%
         \@left@paren%
     \fi%
 }
 \def){%
-    \relax%
-    \ifmmode%
-        \right\@right@paren%
-    \else%
-        \@right@paren%
+    \@right@paren%
+}
+\def\@BRACKET@#1){%
+    #1%
+    \@right@paren%
+    \addtocounter{paren@depth}{-1}%
+    \def\@paren@arg{#1}
+    \ifcsname paren@depth@\theparen@depth @on@close\endcsname%
+        \csname paren@depth@\theparen@depth @on@close\endcsname%
+        \expandafter\def\csname paren@depth@\theparen@depth @on@close\endcsname{}%
     \fi%
 }
-
 
 
 \let\@left@angle=\langle
