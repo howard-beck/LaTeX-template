@@ -233,7 +233,7 @@
 % rank
 \def\rk{\mathrm{rk}}
 % corank
-\def\cork{\mathrm{cork}\let\@morava\true}
+\def\cork{\mathrm{cork}\global\let\@morava\true}
 \makecat{Nm}
 
 % real representation ring
@@ -391,14 +391,14 @@
             \@check@morava@against{\@K@arg}{m}
             \@check@morava@against{\@K@arg}{i}
             \@check@morava@against{\@K@arg}{j}
-            \IfBeginWith{\@K@arg}{\infty}{\let\@morava\true}{}%
+            \@check@morava@against{\@K@arg}{\infty}
             %
             \immediate\write\@auxout{%
                 \string%
                 \declareIsMorava{\theK}{\@morava}%
             }%
         }%
-        #1%
+        \expandafter#1%
     \fi%
 }
 % telescope

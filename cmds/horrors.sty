@@ -14,7 +14,7 @@
         \let\@has@left@paren\true%
         \ifnum\@paren@do@nothing=\false%
             \stepcounter{paren@depth}%
-            \@left@paren%
+            \left\@left@paren%
             \expandafter\expandafter\expandafter\@BRACKET@
         \fi%
     \else%
@@ -26,7 +26,7 @@
 }
 \def\@BRACKET@#1){%
     #1%
-    \@right@paren%
+    \right\@right@paren%
     \addtocounter{paren@depth}{-1}%
     \def\@paren@arg{#1}
     \ifcsname paren@depth@\theparen@depth @on@close\endcsname%
