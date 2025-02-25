@@ -10,7 +10,15 @@
     \fi%
     \@old@qedsymbol%
 }
-\renewcommand*{\proofname}{\scshape Proof}
+% https://tex.stackexchange.com/a/8131
+\renewenvironment{proof}[1][\proofname]{%
+    \par\pushQED{\qed}%
+    \normalfont\topsep6\p@\@plus6\p@\relax\trivlist%
+        \item[\hskip\labelsep\scshape#1\@addpunct{.}]\ignorespaces%
+}{%
+    \popQED%
+    \endtrivlist\@endpefalse%
+}
 
 
 \newtheoremstyle{axiomtheorem}
