@@ -1,3 +1,24 @@
+\usepackage{kpfonts}
+
+\def\omicron{o}
+
+\def\makecapletter#1#2{
+    \expandafter\def\csname#1\endcsname{\ensuremath{\mathrm{#2}}}
+}
+\makecapletter{Alpha}{A}
+\makecapletter{Beta}{B}
+\makecapletter{Epsilon}{E}
+\makecapletter{Zeta}{Z}
+\makecapletter{Eta}{H}
+\makecapletter{Iota}{I}
+\makecapletter{Kappa}{K}
+\makecapletter{Mu}{M}
+\makecapletter{Nu}{N}
+\makecapletter{Omicron}{O}
+\makecapletter{Rho}{P}
+\makecapletter{Tau}{T}
+\makecapletter{Chi}{X}
+
 \def\defas#1{\textbf{#1}}
 \let\sect\S
 
