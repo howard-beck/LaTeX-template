@@ -11,6 +11,16 @@
     \@old@qedsymbol%
 }
 
+
+\newtheoremstyle{axiomtheorem}
+{}                % Space above
+{}                % Space below
+{\scshape}        % Theorem body font % (default is "\upshape")
+{}                % Indent amount
+{\bfseries\scshape}       % Theorem head font
+{.}               % Punctuation after theorem head
+{ }               % Space after theorem head
+{}                % Theorem head spec
 % https://tex.stackexchange.com/questions/201956/how-do-i-make-all-the-theorem-alike-environments-have-an-ending-symbol
 \renewcommand\@endtheorem{%
     \ifthenelse{\equal{\@thmstylenow}{plain}}%
@@ -29,18 +39,19 @@
 }
 
 \def\@thmstylenow{}
-\def\@currentthmstyle{plain}
+\def\@currentthmstyle{fancyplain}
 \let\@old@theoremstyle\theoremstyle
 \def\theoremstyle#1{%
     \def\@currentthmstyle{#1}
     \@old@theoremstyle{#1}
 }
 
-\let\@old@newtheorem\newtheorem
+\NewCommandCopy{\@old@newtheorem}{\newtheorem}
 \RenewDocumentCommand{\newtheorem}{m O{} m}{
     \expandafter\let\csname @#1@thmstyle\endcsname\@currentthmstyle
-    \@old@newtheorem{#1}[#2]{#3}
-
+    \@old@newtheorem{#1}[#2]{\scshape#3}
+    \@old@newtheorem*{#1*}{\scshape#3}
+    %
     \expandafter\let\csname @old@#1\expandafter\endcsname\csname#1\endcsname%
     \expandafter\def\csname#1\endcsname##1{%
         \expandafter\let\csname @thmstylenow\expandafter\endcsname\csname @#1@thmstyle\endcsname%
@@ -56,8 +67,8 @@
         \label{theorem.\thethm}%
     }%
 }
-\makeatother
 
+\makeatother
 \newtheorem{thm}{Theorem}
 \newtheorem{lemma}[thm]{Lemma}
 \newtheorem{prop}[thm]{Proposition}
@@ -73,16 +84,23 @@
 \newtheorem{constr}[thm]{Construction}
 \newtheorem{rem}[thm]{Reminder}
 \newtheorem{intuit}[thm]{Intuition}
+\newtheorem{upshot}[thm]{Upshot}
+\newtheorem{digression}[thm]{Digression}
+\newtheorem{comment}[thm]{Comment}
+\newtheorem{commentary}[thm]{Commentary}
 
 \newtheorem{question}[thm]{Question}
 \newtheorem{answer}[thm]{Answer}
 \newtheorem{example}[thm]{Example}
 \newtheorem{nexample}[thm]{Non-Example}
 
+\theoremstyle{axiomtheorem}
+\newtheorem{axiom}[thm]{Axiom}
+
 \newtheorem{exer}[thm]{Exercise}
 
 \usepackage[breakable]{tcolorbox}
-\newtcolorbox{digression}[1][]{
+\newtcolorbox{digression_box}[1][]{
     width=0.9\linewidth,
     center,
     breakable,

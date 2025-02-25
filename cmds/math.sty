@@ -1,10 +1,77 @@
 \makeatletter
 
 %% NOTATIONS
-\def\tof#1{\xrightarrow{#1}}
-\let\incl\hookrightarrow
-\let\incled\hookleftarrow
+% #1: name
+% #2: no args
+% #3: with args
+\NewDocumentCommand\makearrow{m m m O{\NewDocumentCommand}}{%
+    % ##1: top label
+    % ##2: bottom label
+    \expandafter#4\csname#1\endcsname{O{} O{}}{%
+        \ifstrempty{##1}{%
+            #2%
+        }{%
+            #3[##2]{##1}%
+        }%
+    }%
+    \expandafter\def\csname#1f\endcsname##1{%
+        #3{##1}%
+    }%
+}
+
+\let\@old@to\to
+
+\makearrow{to}{\@old@to}{\xrightarrow}[\RenewDocumentCommand]
+\makearrow{from}{\leftarrow}{\xleftarrow}
+% inclusion
+\makearrow{incl}{\hookrightarrow}{\xhookrightarrow}
+% inclusion from
+\makearrow{incled}{\hookleftarrow}{\xhookleftarrow}
+% include, going up
 \def\inclUP{\mathrel{\rotatebox[origin=c]{90}{$\incl$}}}
+% legacy
+\let\inclup\inclUP
+% surjection
+\makearrow{surj}{\twoheadrightarrow}{\xtwoheadrightarrow}
+% surjected from
+\makearrow{surjed}{\twoheadleftarrow}{\xtwoheadleftarrow}
+% \in, going up
+\def\inUP{\mathrel{\rotatebox[origin=c]{90}{$\in$}}}
+% \in, going down
+\def\inDOWN{\mathrel{\rotatebox[origin=c]{-90}{$\in$}}}
+% such that
+\def\st{\text{ such that }}
+
+% cup product
+\let\@old@cup\cup
+\let\cup\smile
+\def\union{%
+    \@ifnextchar_{\union@}{\@old@cup}
+}
+\def\union@_#1{
+    \underset{#1}{\@old@cup}
+}
+\def\bigunion{\bigcup\limits}
+\let\dunion\sqcup
+\let\djunion\dunion
+\def\bigdunion{\bigsqcup\limits}
+\let\bigdjunion\bigdunion
+
+\let\@old@sum\sum
+\let\@old@prod\prod
+\let\@old@bigoplus\bigoplus
+\let\@old@bigotimes\bigotimes
+
+\def\sum{\@old@sum\limits}
+\def\prod{\@old@prod\limits}
+\def\bigoplus{\@old@bigoplus\limits}
+\def\bigotimes{\@old@bigotimes\limits}
+
+\let\@old@old@bigvee\bigvee
+\def\bigvee{\@old@old@bigvee\limits}
+\let\@old@old@bigwedge\bigwedge
+\def\bigwedge{\@old@old@bigwedge\limits}
+
 
 % https://tex.stackexchange.com/questions/2607/spacing-around-left-and-right
 \let\@old@left\left
@@ -27,7 +94,7 @@
 \let\@style@cat@desc\mathrm
 
 \NewDocumentCommand\makecat{m O{#1}}{\expandafter\def\csname#1\endcsname{\@style@cat{#2}\xspace}}
-\NewDocumentCommand\makeop{m O{#1}}{\expandafter\def\csname#1\endcsname{\@style@op{#2}\xspace}}
+\NewDocumentCommand\makeop{m O{#1}}{\expandafter\def\csname#1\endcsname{\operatorname{\@style@op{#2}}}}
 \NewDocumentCommand\makefunct{m O{#1}}{\expandafter\def\csname#1\endcsname{\@style@funct{#2}\xspace}}
 \def\makecatdesc#1{\expandafter\def\csname#1\endcsname{\@style@cat@desc{#1}\xspace}}
 
@@ -46,20 +113,28 @@
 % isomorphism
 \let\iso\simeq
 \def\toiso{\tof{\sim}}
-% from arrow
-\let\from\leftarrow
+
+% natural transformation
+\let\nattrans\implies
+
 
 % opposite category
 \makecatdesc{op}
+
+% just some category
+\def\CC{\mathcal{C}}
 
 % small categories
 \makecat{Cat}
 % locally small categories
 \makecat{CAT}
 
-\makecat{Set}
+\makecat@pt{Set}
 \makecat{Poset}
-\makecat{FinSet}
+\makecat@pt{FinSet}
+
+\usepackage{bbm}
+\def\DDelta{\mathbbm{\Delta}}
 
 % Hom bifunctor
 \makefunct{Hom}
@@ -75,6 +150,10 @@
 
 % realization: Grpd --> Cat
 \makefunct{B}
+
+% various (co)limits
+\makeop{invlim}
+\makeop{colim}
 
 % Higher Algebra ish
 %  Dold-Kan correspondance
@@ -209,7 +288,8 @@
 
 
 % cokernel
-\def\coker{\mathrm{coker}}
+\makeop{coker}
+\makeop{im}
 
 %% ALGEBRAIC GEOMETRY
 \makefunct{Aut}
@@ -224,6 +304,11 @@
 
 
 %% EQUIVARIANT
+% finite sets with various actions
+\def\FG{\mathbb{F}_G}
+\def\FH{\mathbb{F}_H}
+\def\FK{\mathbb{F}_K}
+
 % orbit category
 \def\Orb#1{\mathcal{O}_{#1}}
 % family of subgroups
@@ -243,6 +328,10 @@
 
 %% TOPOLOGY
 \makecat@pt{Top}
+\makecat@pt{CW}
+\makecat@pt{kTop}
+\makecat@pt{Spaces}
+\makecat{Ho}
 
 % homeomorphisms
 \let\homeo\cong
@@ -258,25 +347,15 @@
 
 
 % (homotopy)(co)fibers
-\def\fib{\mathrm{fib}}
-\def\hofib{\mathrm{hofib}}
-\def\cofib{\mathrm{cofib}}
-\def\hocofib{\mathrm{hocofib}}
+\makeop{fib}
+\makeop{hofib}
+\makeop{cofib}
+\makeop{hocofib}
 
 \def\h{\mathsf{h}}
 
 % Mapping spaces
 \makefunct@pt{Map}
-
-% cup product
-\let\@old@cup\cup
-\let\cup\smile
-\def\union{%
-    \@ifnextchar_{\union@}{\@old@cup}
-}
-\def\union@_#1{
-    \underset{#1}{\@old@cup}
-}
 
 % wedge sums use the \vee symbol, and smash products use the \wedge symbol
 % exchange these
@@ -319,6 +398,8 @@
 
 %% Stable
 \makecat{Sp}
+\makecat{PreSpectra}
+\makecat{Spectra}
 \def\Spfin{\Sp^\omega}
 \def\Sppfin{\Spfin_{(p)}}
 
