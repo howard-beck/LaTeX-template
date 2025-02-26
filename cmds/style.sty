@@ -20,5 +20,10 @@
 \def\defas#1{\textbf{#1}}
 \let\sect\S
 
+\makeatletter
+\let\@old@ell\ell
+\def\ell{\ensuremath{\@old@ell}}
+\makeatother
+
 \def\true{1}
 \def\false{0}
