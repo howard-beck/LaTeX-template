@@ -32,14 +32,12 @@
 {}                % Theorem head spec
 % https://tex.stackexchange.com/questions/201956/how-do-i-make-all-the-theorem-alike-environments-have-an-ending-symbol
 \renewcommand\@endtheorem{%
-    \ifthenelse{\equal{\@thmstylenow}{plain}}%
-    {}%
     {%
-        {\unskip\nobreak\hfil\penalty50
+        \unskip\nobreak\hfil\penalty50
         \hskip2em\vadjust{}\nobreak\hfil$\triangleleft$
         \parfillskip=0pt \finalhyphendemerits=0 \par
-        \penalty 10000 \parskip=0pt\noindent}\ignorespaces
-    }%
+        \penalty 10000 \parskip=0pt\noindent%
+    }\ignorespaces
     \endtrivlist\@endpefalse%
     \addtocounter{@thm@depth}{-1}%
     \ifnum\value{@thm@depth}=0%
@@ -97,6 +95,7 @@
 \newtheorem{digression}[thm]{Digression}
 \newtheorem{comment}[thm]{Comment}
 \newtheorem{commentary}[thm]{Commentary}
+\newtheorem{reminder}[thm]{Reminder}
 
 \newtheorem{question}[thm]{Question}
 \newtheorem{answer}[thm]{Answer}

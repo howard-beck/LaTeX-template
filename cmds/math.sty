@@ -81,11 +81,27 @@
 
 \let\emptyset\varnothing
 
+\let\defby\cong
+
+\let\llb\llbracket
+\let\rrb\rrbracket
+
+\def\ev{\mathrm{ev}}
+\def\even{\mathrm{even}}
+\def\odd{\mathrm{odd}}
+
+% circle group
+\def\T{\mathbb{T}}
+
+
+
 %% COMPLEX NUMBERS
 % https://tex.stackexchange.com/questions/668241/lowercase-mathscr-and-mathcal-letters
 \def\Re{\mathscr{R\hspace{-0.1em}e}}
 \def\Im{\mathscr{I\hspace{-0.1em}m}}
 \let\conj\overline
+
+
 
 %% CATEGORIES
 \let\@style@cat\mathsf
@@ -95,7 +111,7 @@
 
 \NewDocumentCommand\makecat{m O{#1}}{\expandafter\def\csname#1\endcsname{\@style@cat{#2}\xspace}}
 \NewDocumentCommand\makeop{m O{#1}}{\expandafter\def\csname#1\endcsname{\operatorname{\@style@op{#2}}}}
-\NewDocumentCommand\makefunct{m O{#1}}{\expandafter\def\csname#1\endcsname{\@style@funct{#2}\xspace}}
+\NewDocumentCommand\makefunct{m O{#1}}{\expandafter\def\csname#1\endcsname{\operatorname{\@style@funct{#2}}}}
 \def\makecatdesc#1{\expandafter\def\csname#1\endcsname{\@style@cat@desc{#1}\xspace}}
 
 \def\makecat@pt#1{\expandafter\def\csname#1\endcsname{%
@@ -106,6 +122,12 @@
     \@style@funct{#2}%
     \@ifnextchar*{_{\pt}\expandafter\@gobble}{}%
 }}
+
+% morphisms
+\makeop{mor}
+% source and target
+\makeop{source}
+\makeop{target}
 
 % adjoint pair
 \let\adjoint\rightleftharpoons
@@ -133,7 +155,7 @@
 \makecat{Poset}
 \makecat@pt{FinSet}
 
-\def\DDelta{\mathbbm{\Delta}}
+\def\DDelta{\Delta\!\!\!\!\!\scalebox{0.8}{\mbox{$\Delta$}}}
 
 % Hom bifunctor
 \makefunct{Hom}
@@ -248,7 +270,8 @@
 % modules
 \makecat{Mod}
 % comodules
-\makecat{Comod}
+\makecat{Comod}[CoMod]
+\makecat{CoMod}
 % vector spaces
 \makecat{Vect}
 % commutative algebra objects
@@ -295,12 +318,19 @@
 %% ALGEBRAIC GEOMETRY
 \makefunct{Aut}
 \def\Mfg{\mathcal{M}_{\mathrm{fg}}}
+\def\Mfgl{\mathcal{M}_{\mathrm{fgl}}}
+\def\FGL{\mathsf{FGL}}
+
 \def\G{\mathbb{G}}
 \def\Ghat{\widehat{\mathbb{G}}}
 
 \def\Gm{\G_m}
 
 \makefunct{Spec}
+\makefunct{Spf}
+% quasi-coherent sheaves
+\makefunct{QCoh}
+
 
 
 
@@ -340,6 +370,15 @@
 
 % point
 \def\pt{*}
+% CPs
+\def\CPinf{\CP{\infty}}
+\def\CP#1{\C P^{#1}}
+% RPs
+\def\RPinf{\RP{\infty}}
+\def\RP#1{\R P^{#1}}
+% HPs
+\def\HPinf{\HP{\infty}}
+\def\HP#1{\QH P^{#1}}
 
 % suspension functor
 \let\Susp\Sigma
@@ -384,6 +423,9 @@
 \let\bigwedge\bigvee
 
 % Algebraic topology
+% Thom spaces
+\makeop{Th}
+
 % (co)homology
 \def\H{\mathrm{H}}
 % Steenrod squares
@@ -393,7 +435,8 @@
 \def\Ap{\Steenrod{p}}
 
 % Differential topology
-\def\T{\mathrm{T}}
+% tangent bundle
+\def\Tg{\mathrm{T}}
 
 
 
@@ -425,75 +468,24 @@
 \def\pcompl{\compl[p]}
 
 \NewDocumentCommand\makespectrum{m O{#1}}{%
-    \expandafter\def\csname#1\endcsname{\mathcal@sp{#2}}%
+    \expandafter\def\csname#1\endcsname{\mathrm{#2}}%
 }
 \def\S{\mathbb{S}}
 \makespectrum{MU}
 \makespectrum{BP}
 \makespectrum{tmf}
-
-% Morava K-theory
-\newcounter{K}
-\def\@check@morava@against#1#2{%
-    \IfBeginWith{#1}{\detokenize{#2}}{%
-        \let\@morava\true%
-        \message{[#1 is morava]}%
-    }{\message{[#1 is not morava]}}%
-}
-
-\def\declareIsMorava#1#2{%
-    \expandafter\gdef\csname @K@#1@is@morava\endcsname{#2}%
-}
-\def\K#1{%
-    \stepcounter{K}%
-    \ifcsname @K@\theK @is@morava\endcsname%
-        \ifnum\csname @K@\theK @is@morava\endcsname=1%
-            \mathcal@sp{K}%
-        \else%
-            \mathrm{K}%
-        \fi%
-    \else%
-        K%
-    \fi%
-    %
-    %
-    \let\@morava\false%
-    \edef\@paren@depth@now{\theparen@depth}%
-    %
-    \let\@paren@do@nothing\true%
-    \let\@has@left@paren\false%
-    #1%
-    \let\@paren@do@nothing\false%
-    %
-    \ifnum\@has@left@paren=\true%
-        \expandafter\def\csname paren@depth@\@paren@depth@now @on@close\endcsname{%
-            \def\@K@arg{\detokenize\expandafter\expandafter\expandafter{\expandafter\@paren@arg}}%
-            %
-            \@check@morava@against{\@K@arg}{n}
-            \@check@morava@against{\@K@arg}{m}
-            \@check@morava@against{\@K@arg}{i}
-            \@check@morava@against{\@K@arg}{j}
-            \@check@morava@against{\@K@arg}{\infty}
-            %
-            \immediate\write\@auxout{%
-                \string%
-                \declareIsMorava{\theK}{\@morava}%
-            }%
-        }%
-        \expandafter#1%
-    \fi%
-}
-% telescope
-\makespectrum{T}
 \makespectrum{KU}
 \makespectrum{KO}
 \makespectrum{LT}[E]
 \def\En{\LT_{n}}
+% algebraic K theory
+\def\K{\mathrm{K}}
 
-% Eilenberg-MacLane spectrum
+% Eilenberg-MacLane spectra
 \makespectrum{EM}[H]
-% Z-valued E-M spectrum
 \def\HZ{\EM\Z}
+\def\HQ{\EM\Q}
+\def\HR{\EM R}
 
 % algebraic K-theory and friends
 \makeop{Kalg}[K]

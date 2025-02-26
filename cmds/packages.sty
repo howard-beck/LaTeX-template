@@ -21,8 +21,12 @@
 \usepackage{xstring}
 \usepackage[shortlabels]{enumitem}
 \usepackage{bold-extra}
-\usepackage{extpfeil}
 \usepackage{bbm}
+% https://tex.stackexchange.com/questions/297108/using-stmaryrd-with-extpfeil
+\usepackage[only,llbracket,rrbracket]{stmaryrd}
+\expandafter\def\csname opt@stmaryrd.sty\endcsname
+{only,shortleftarrow,shortrightarrow}
+\usepackage{extpfeil}
 
 
 \usepackage[scr=esstix, cal=esstix]{mathalpha}
