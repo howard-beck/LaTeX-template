@@ -4,16 +4,9 @@
 % #1: name
 % #2: no args
 % #3: with args
-\NewDocumentCommand\makearrow{m m m O{\NewDocumentCommand}}{%
+\def\makearrow#1#2#3{%
     % ##1: top label
-    % ##2: bottom label
-    \expandafter#4\csname#1\endcsname{O{} O{}}{%
-        \ifstrempty{##1}{%
-            #2%
-        }{%
-            #3[##2]{##1}%
-        }%
-    }%
+    \expandafter\let\csname#1\endcsname#2%
     \expandafter\def\csname#1f\endcsname##1{%
         #3{##1}%
     }%
@@ -21,8 +14,9 @@
 
 \let\@old@to\to
 
-\makearrow{to}{\@old@to}{\xrightarrow}[\RenewDocumentCommand]
+\makearrow{to}{\@old@to}{\xrightarrow}
 \makearrow{from}{\leftarrow}{\xleftarrow}
+\makearrow{tofrom}{\leftrightarrow}{\xleftrightarrow}
 % inclusion
 \makearrow{incl}{\hookrightarrow}{\xhookrightarrow}
 % inclusion from
@@ -93,6 +87,9 @@
 % circle group
 \def\T{\mathbb{T}}
 
+% otherwise
+\def\ow{\text{otherwise}}
+
 
 
 %% COMPLEX NUMBERS
@@ -128,6 +125,8 @@
 % source and target
 \makeop{source}
 \makeop{target}
+% identity
+\makefunct{id}
 
 % adjoint pair
 \let\adjoint\rightleftharpoons
@@ -368,6 +367,9 @@
 \let\homeo\cong
 \let\homeom\homeo
 
+% n-skeleton of a CW complex
+\makeop{sk}
+
 % point
 \def\pt{*}
 % CPs
@@ -391,6 +393,10 @@
 \makeop{hofib}
 \makeop{cofib}
 \makeop{hocofib}
+
+% cylinders and cones
+\makeop{Cyl}
+\makeop{Cone}
 
 \def\h{\mathsf{h}}
 
@@ -441,6 +447,8 @@
 
 
 %% Stable
+\def\stab{\mathrm{st}}
+
 \makecat{Sp}
 \makecat{PreSpectra}
 \makecat{Spectra}
