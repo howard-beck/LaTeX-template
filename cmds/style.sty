@@ -1,3 +1,5 @@
+\makeatletter
+
 \def\omicron{o}
 
 \def\makecapletter#1#2{
@@ -20,10 +22,26 @@
 \def\defas#1{\textbf{#1}}
 \let\sect\S
 
-\makeatletter
 \let\@old@ell\ell
 \def\ell{\ensuremath{\@old@ell}}
-\makeatother
+
 
 \def\true{1}
 \def\false{0}
+
+\let\@insidesection\false
+\def\@redefsect#1{%
+    \expandafter\let\csname @old@#1\expandafter\endcsname\csname#1\endcsname
+    \expandafter\def\csname #1\endcsname##1{%
+        \let\@insidesection\true%
+        \csname @old@#1\endcsname{##1}%
+        \let\@insidesection\false%
+    }
+}
+
+\@redefsect{section}
+\@redefsect{subsection}
+\@redefsect{subsubsection}
+
+
+\makeatother

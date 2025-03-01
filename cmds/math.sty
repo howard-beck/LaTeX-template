@@ -89,6 +89,7 @@
 
 % otherwise
 \def\ow{\text{otherwise}}
+\def\etc{\ldots}
 
 
 
@@ -101,24 +102,38 @@
 
 
 %% CATEGORIES
+
+\NewDocumentCommand\@factory@makecatthing{m m}{
+    % #1 = cat thing name (cat, funct, op, desc)
+    % #2 = cat thing style
+    \expandafter\NewDocumentCommand\csname make#1\endcsname{m O{##1} O{\NewDocumentCommand}}{
+        % ##1 = cat command
+        % ##2 = cat display
+        % ##3 = how to define
+        \expandafter##3\csname##1\endcsname{}{%
+            % ###1 = star
+            \ensuremath{%
+                #2{##2}%
+                \@ifnextchar*{%
+                    _{\pt}%
+                    \expandafter\@gobble%
+                }{}%
+            }%
+        }%
+    }%
+}
+
 \let\@style@cat\mathsf
-\let\@style@funct\mathrm
-\let\@style@op\mathrm
+\def\@style@funct#1{\operatorname{\mathrm{#1}}}
+\def\@style@op#1{\operatorname{\mathrm{#1}}}
 \let\@style@cat@desc\mathrm
 
-\NewDocumentCommand\makecat{m O{#1}}{\expandafter\def\csname#1\endcsname{\@style@cat{#2}\xspace}}
-\NewDocumentCommand\makeop{m O{#1}}{\expandafter\def\csname#1\endcsname{\operatorname{\@style@op{#2}}}}
-\NewDocumentCommand\makefunct{m O{#1}}{\expandafter\def\csname#1\endcsname{\operatorname{\@style@funct{#2}}}}
-\def\makecatdesc#1{\expandafter\def\csname#1\endcsname{\@style@cat@desc{#1}\xspace}}
+\@factory@makecatthing{cat}{\@style@cat}
+\@factory@makecatthing{funct}{\@style@funct}
+\@factory@makecatthing{op}{\@style@op}
+\@factory@makecatthing{catdesc}{\@style@cat@desc}
 
-\def\makecat@pt#1{\expandafter\def\csname#1\endcsname{%
-    \@style@cat{#1}%
-    \@ifnextchar*{_{\pt}\expandafter\@gobble}{}%
-}}
-\NewDocumentCommand\makefunct@pt{m O{#1}}{\expandafter\def\csname#1\endcsname{%
-    \@style@funct{#2}%
-    \@ifnextchar*{_{\pt}\expandafter\@gobble}{}%
-}}
+
 
 % morphisms
 \makeop{mor}
@@ -150,9 +165,9 @@
 % locally small categories
 \makecat{CAT}
 
-\makecat@pt{Set}
+\makecat{Set}
 \makecat{Poset}
-\makecat@pt{FinSet}
+\makecat{FinSet}
 
 \def\DDelta{\Delta\!\!\!\!\!\scalebox{0.8}{\mbox{$\Delta$}}}
 
@@ -315,7 +330,6 @@
 \makeop{im}
 
 %% ALGEBRAIC GEOMETRY
-\makefunct{Aut}
 \def\Mfg{\mathcal{M}_{\mathrm{fg}}}
 \def\Mfgl{\mathcal{M}_{\mathrm{fgl}}}
 \def\FGL{\mathsf{FGL}}
@@ -357,10 +371,10 @@
 
 
 %% TOPOLOGY
-\makecat@pt{Top}
-\makecat@pt{CW}
-\makecat@pt{kTop}
-\makecat@pt{Spaces}
+\makecat{Top}[Top][\RenewDocumentCommand]
+\makecat{CW}
+\makecat{kTop}
+\makecat{Spaces}
 \makecat{Ho}
 
 % homeomorphisms
@@ -401,7 +415,7 @@
 \def\h{\mathsf{h}}
 
 % Mapping spaces
-\makefunct@pt{Map}
+\makefunct{Map}
 
 % wedge sums use the \vee symbol, and smash products use the \wedge symbol
 % exchange these
